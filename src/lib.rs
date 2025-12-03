@@ -149,8 +149,16 @@ pub mod booking_flow {
         payload.types_of_trip = parse_types_of_trip_value(&document);
         payload.select_start_station(&args.from);
         payload.select_dest_station(&args.to);
+        
         let (start_date, end_date) = parse_avail_start_end_date(&document);
+
+        // MODIFIED: If no date is provided via CLI, set the default to the latest possible date (end_date).
+        if args.date.is_none() {
+            payload.outbound_date = end_date.clone();
+        }
+        
         payload.select_date(&start_date, &end_date, &args.date);
+
         payload.select_time(&args.time);
         if args.adult_cnt.is_none() && args.student_cnt.is_none() {
             payload.select_ticket_num(TicketType::Adult, &None);
@@ -318,7 +326,8 @@ pub mod booking_flow {
                 dest_station: 12,
                 search_by: "1".to_string(),
                 types_of_trip: 0,
-                outbound_date: "2023/10/01".to_string(),
+                // NOTE: This date is a temporary placeholder before scraping the real end_date in run_flow
+                outbound_date: "2023/10/01".to_string(), 
                 outbound_time: "08:00".to_string(),
                 security_code: "1234".to_string(),
                 seat_prefer: 0,
@@ -396,32 +405,36 @@ pub mod booking_flow {
             let input = match date.clone() {
                 Some(date) => date,
                 None => get_input(
+                    // MODIFIED: Prompt suggests and uses end_date as the default value.
                     &format!(
-                        "Please select a date between {} and {} (default to {}):",
-                        start_date, end_date, start_date
+                        "Please select a date between {} and {} (default to latest: {}):",
+                        start_date, end_date, end_date 
                     ),
-                    start_date.clone(),
+                    end_date.clone(), // This is the new default value passed to get_input
                 ),
             };
 
             let input = match normalize_date(&input) {
                 Some(date) => date,
                 None => {
-                    println!("Invalid date format, defaulting to {}", start_date);
-                    start_date.clone()
+                    // MODIFIED: Default to end_date on format error
+                    println!("Invalid date format, defaulting to latest date: {}", end_date);
+                    end_date.clone() 
                 }
             };
 
             if input.is_empty() {
-                self.outbound_date = start_date.clone();
+                // MODIFIED: Ensure input defaults to end_date if empty
+                self.outbound_date = end_date.clone(); 
                 return;
             }
 
             if input.ge(start_date) && input.le(end_date) {
                 self.outbound_date = input;
             } else {
-                println!("Invalid date, defaulting to {}", start_date);
-                self.outbound_date = start_date.to_string();
+                // MODIFIED: Default to end_date on range error
+                println!("Invalid date or outside booking range, defaulting to latest date: {}", end_date);
+                self.outbound_date = end_date.to_string(); 
             }
         }
 
