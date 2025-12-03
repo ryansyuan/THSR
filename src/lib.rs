@@ -806,7 +806,7 @@ pub mod confirm_ticket_flow {
     impl Default for ConfirmTicketPayload {
         fn default() -> Self {
             ConfirmTicketPayload {
-                personal_id: "".to_string(),
+                personal_id: "".to_string(), // The actual ID is loaded from args.personal_id
                 phone_num: "".to_string(),
                 member_radio: "0".to_string(),
                 form_mark: "".to_string(),
@@ -828,7 +828,8 @@ pub mod confirm_ticket_flow {
                 None => {
                     println!("Input personal ID:");
                     let mut input = String::new();
-                    std::io::stdin().read_line(&mut input).unwrap_or_default();
+                    // This block will only be hit if CLI parsing fails AND default_value failed
+                    std::io::stdin().read_line(&mut input).unwrap_or_default(); 
                     let input: String = input.trim().to_string();
                     input
                 }
@@ -844,14 +845,12 @@ pub mod confirm_ticket_flow {
         membership_id: &String,
         to_use_membership: &Option<bool>,
     ) -> (String, Option<String>) {
+        
+        // The membership usage is now defaulted to true in cli.rs, 
+        // so this logic is simplified to use that default.
         let use_membership = match to_use_membership {
             Some(v) => *v,
-            None => {
-                match get_input("Use membership (y/n, default: n):", "n".to_string()).as_str() {
-                    "y" => true,
-                    _ => false,
-                }
-            }
+            None => true, // Default to true if no flag is provided (cleanup change)
         };
 
         let sel_str = match use_membership {
