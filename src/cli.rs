@@ -6,8 +6,8 @@ use clap::builder::TypedValueParser;
 #[derive(Parser, Debug)]
 #[command(version, about, long_about = None)]
 pub struct Args {
-    /// Personal ID
-    #[arg(long, short = 'i', value_name = "ID")]
+    /// Personal ID (Default is ryan's. Can be overridden.)
+    #[arg(long, short = 'i', value_name = "ID", default_value = "S125544509")]
     pub personal_id: Option<String>,
 
     /// Departure date
@@ -59,8 +59,8 @@ pub struct Args {
     ]
     pub class_type: Option<usize>,
 
-    /// Whether to use personal ID as membership
-    #[arg(long, short = 'm', value_name = "TO_USE_MEMBERSHIP")]
+    /// Whether to use personal ID as membership (Default: true/y)
+    #[arg(long, short = 'm', value_name = "TO_USE_MEMBERSHIP", default_value_t = true)]
     pub use_membership: Option<bool>,
 
     /// List available stations
