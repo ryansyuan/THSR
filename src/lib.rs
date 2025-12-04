@@ -822,20 +822,19 @@ pub mod confirm_ticket_flow {
     }
 
     impl ConfirmTicketPayload {
+        // MODIFIED: Simplified to use the default/CLI argument directly, skipping interactive prompt.
         pub fn input_personal_id(&mut self, personal_id: &Option<String>) -> String {
-            let input = match personal_id.clone() {
-                Some(id) => id,
-                None => {
-                    println!("Input personal ID:");
-                    let mut input = String::new();
-                    // This block will only be hit if CLI parsing fails AND default_value failed
-                    std::io::stdin().read_line(&mut input).unwrap_or_default(); 
-                    let input: String = input.trim().to_string();
-                    input
-                }
-            };
+            let id_to_use = personal_id
+                .as_ref()
+                .cloned()
+                .unwrap_or_else(|| {
+                    // This is the emergency fallback if the CLI default failed.
+                    println!("Error: Personal ID was empty, using placeholder default A123456789.");
+                    "A123456789".to_string()
+                });
 
-            self.personal_id = input.trim().to_string();
+            println!("Using Personal ID: {}", id_to_use); // Provide feedback
+            self.personal_id = id_to_use.trim().to_string();
             self.personal_id.clone()
         }
     }
@@ -846,8 +845,8 @@ pub mod confirm_ticket_flow {
         to_use_membership: &Option<bool>,
     ) -> (String, Option<String>) {
         
-        // The membership usage is now defaulted to true in cli.rs, 
-        // so this logic is simplified to use that default.
+        // MODIFIED: Now defaults to 'true' if the value is missing from the command line, 
+        // relying on the cli.rs default and eliminating interactive prompt need.
         let use_membership = match to_use_membership {
             Some(v) => *v,
             None => true, // Default to true if no flag is provided (cleanup change)
