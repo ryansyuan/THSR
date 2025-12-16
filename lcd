@@ -4,7 +4,6 @@ void DisplayRpsImage(uint8_t x)
     unsigned char *image_data2; size_t image_size2;
     unsigned char *image_data3; size_t image_size3;
     unsigned char *image_data4; size_t image_size4;
-
     LCD_Clear(); 
 
     switch (x)
