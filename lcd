@@ -1,36 +1,20 @@
-void DisplayRpsImage(uint8_t x)
-{
-    unsigned char *image_data; size_t image_size;
-    unsigned char *image_data2; size_t image_size2;
-    unsigned char *image_data3; size_t image_size3;
-    unsigned char *image_data4; size_t image_size4;
-    LCD_Clear(); 
+unsigned char scissor_image1[]={130};
+unsigned char scissor_image2[]={131};
+unsigned char scissor_image3[]={132};
+unsigned char scissor_image4[]={133};
+// 石頭的圖案資料
+unsigned char rock_image1[]={134};
+unsigned char rock_image2[]={135};
+unsigned char rock_image3[]={136};
+unsigned char rock_image4[]={137};
+// 布的圖案資料
+unsigned char paper_image1[]={138};
+unsigned char paper_image2[]={139};
+unsigned char paper_image3[]={140};
+unsigned char paper_image4[]={141};
 
-    switch (x)
-    {
-        case 1: // 石頭
-            image_data = rock_image1; image_size = sizeof(rock_image1);
-            image_data2 = rock_image2; image_size2 = sizeof(rock_image2);
-            image_data3 = rock_image3; image_size3 = sizeof(rock_image3);
-            image_data4 = rock_image4; image_size4 = sizeof(rock_image4);
-            break;
-        case 2: // 布
-            image_data = paper_image1; image_size = sizeof(paper_image1);
-            image_data2 = paper_image2; image_size2 = sizeof(paper_image2);
-            image_data3 = paper_image3; image_size3 = sizeof(paper_image3);
-            image_data4 = paper_image4; image_size4 = sizeof(paper_image4);
-            break;
-        case 3: // 剪刀
-            image_data = scissor_image1; image_size = sizeof(scissor_image1);
-            image_data2 = scissor_image2; image_size2 = sizeof(scissor_image2);
-            image_data3 = scissor_image3; image_size3 = sizeof(scissor_image3);
-            image_data4 = scissor_image4; image_size4 = sizeof(scissor_image4);
-            break;
-        default:
-            return; 
-    }
-    LCD_DrawString(0, 0, image_data, image_size);
-    LCD_DrawString(0, 8, image_data2, image_size2);
-    LCD_DrawString(2, 0, image_data3, image_size3);
-    LCD_DrawString(2, 8, image_data4, image_size4);
-}
+uint8_t  rx_data;    
+uint32_t adc_value; 
+
+volatile uint8_t g_result_mode = 0; 
+volatile uint8_t g_blink_count = 0;    
