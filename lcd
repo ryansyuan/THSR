@@ -16,7 +16,6 @@ void DisplayRpsImage(uint8_t x)
             break;
         case 2: // 布
             image_data = paper_image1; image_size = sizeof(paper_image1);
-
             image_data2 = paper_image2; image_size2 = sizeof(paper_image2);
             image_data3 = paper_image3; image_size3 = sizeof(paper_image3);
             image_data4 = paper_image4; image_size4 = sizeof(paper_image4);
@@ -25,7 +24,7 @@ void DisplayRpsImage(uint8_t x)
             image_data = scissor_image1; image_size = sizeof(scissor_image1);
             image_data2 = scissor_image2; image_size2 = sizeof(scissor_image2);
             image_data3 = scissor_image3; image_size3 = sizeof(scissor_image3);
-            image_data4 = rock_image4; image_size4 = sizeof(scissor_image4);
+            image_data4 = scissor_image4; image_size4 = sizeof(scissor_image4);
             break;
         default:
             return; 
